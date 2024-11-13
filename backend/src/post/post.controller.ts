@@ -9,14 +9,15 @@ import {
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { Post as PostEntity } from '../entities/post.entity';
+import { CreatePostDto } from './dto/create-post.dto';
 
 @Controller('posts')
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
   @Post()
-  create(@Body() post: PostEntity): Promise<PostEntity> {
-    return this.postService.create(post);
+  create(@Body() createPostDto: CreatePostDto): Promise<PostEntity> {
+    return this.postService.create(createPostDto);
   }
 
   @Get()

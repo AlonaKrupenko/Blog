@@ -1,10 +1,20 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../api/axiosInstance";
+import axios from "axios";
 
 export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {
   const response = await api.get("/posts");
   return response.data;
 });
+
+export const createPost = createAsyncThunk(
+  "posts/createPost",
+  async (postData: { title: string; content: string }, { dispatch }) => {
+    const response = await axios.post("http://localhost:4000/posts", postData);
+    dispatch(fetchPosts());
+    return response.data;
+  }
+);
 
 const postSlice = createSlice({
   name: "posts",

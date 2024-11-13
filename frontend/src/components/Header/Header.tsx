@@ -5,7 +5,11 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { Container } from "@mui/material";
 
-const Header = () => {
+interface HeaderProps {
+  onAddPostClick: () => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ onAddPostClick }) => {
   return (
     <AppBar position="static" color="primary">
       <Container maxWidth="lg">
@@ -13,7 +17,8 @@ const Header = () => {
           <Typography variant="h6" component="div">
             Awesome Blog
           </Typography>
-          <Button color="inherit" variant="outlined">
+
+          <Button onClick={onAddPostClick} color="inherit" variant="outlined">
             Add Post
           </Button>
         </Toolbar>
