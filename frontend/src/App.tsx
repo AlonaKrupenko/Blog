@@ -1,9 +1,13 @@
 import { useState } from "react";
 import styles from "./App.module.scss";
 import Header from "./components/Header/Header";
-import Posts from "./components/PostsList/PostsList";
+import PostsList from "./pages/PostsList/PostsList";
 import Container from "@mui/material/Container";
 import NewPostModal from "./components/NewPostModal/NewPostModal";
+// import { Route, Router, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+
+import PostDetails from "./pages/PostDetails/PostDetails";
 
 function App() {
   const [openModal, setOpenModal] = useState(false);
@@ -12,14 +16,19 @@ function App() {
   const handleCloseModal = () => setOpenModal(false);
 
   return (
-    <div className={styles.App}>
-      <Header onAddPostClick={handleOpenModal} />
-      <NewPostModal open={openModal} onClose={handleCloseModal} />
+    <Router>
+      <div className={styles.App}>
+        <Header onAddPostClick={handleOpenModal} />
+        <NewPostModal open={openModal} onClose={handleCloseModal} />
 
-      <Container>
-        <Posts />
-      </Container>
-    </div>
+        <Container>
+          <Routes>
+            <Route path="/" element={<PostsList />} />
+            <Route path="/post/:id" element={<PostDetails />} />
+          </Routes>
+        </Container>
+      </div>
+    </Router>
   );
 }
 
