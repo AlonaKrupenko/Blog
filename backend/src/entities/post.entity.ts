@@ -25,6 +25,9 @@ export class Post {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @OneToMany(() => Comment, (comment) => comment.post, { eager: true })
+  @OneToMany(() => Comment, (comment) => comment.post, {
+    eager: true,
+    onDelete: 'CASCADE',
+  })
   comments: Comment[];
 }

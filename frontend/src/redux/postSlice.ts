@@ -52,6 +52,14 @@ export const deletePost = createAsyncThunk(
   }
 );
 
+export const addComment = createAsyncThunk(
+  "posts/addComment",
+  async ({ postId, content }: { postId: string; content: string }) => {
+    const response = await api.post(`/posts/${postId}/comments`, { content });
+    return response.data;
+  }
+);
+
 const initialState: PostState = {
   posts: [],
   currentPost: null,
@@ -121,28 +129,24 @@ const postSlice = createSlice({
       .addCase(deletePost.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to delete the post.";
+      })
+
+      // Add comment to a post 
+      .addCase(addComment.fulfilled, (state, action) => {
+        const { postId, content, id } = action.payload;
+
+        // Update comments in the list of posts
+        const post = state.posts.find((p) => p.id === postId);
+        if (post) {
+          post.comments.push({ id, content, postId });
+        }
+
+        // Update comments in currentPost if it matches the postId
+        if (state.currentPost && state.currentPost.id === postId) {
+          state.currentPost.comments.push({ id, content, postId });
+        }
       });
   },
 });
-
-// const postSlice = createSlice({
-//   name: "posts",
-//   initialState,
-//   reducers: {},
-//   extraReducers: (builder) => {
-//     builder
-//       .addCase(fetchPosts.pending, (state) => {
-//         state.loading = true;
-//         state.error = null;
-//       })
-//       .addCase(fetchPosts.fulfilled, (state, action) => {
-//         state.loading = false;
-//         state.posts = action.payload;
-//       })
-//       .addCase(fetchPostById.fulfilled, (state, action) => {
-//         state.currentPost = action.payload;
-//       });
-//   },
-// });
 
 export default postSlice.reducer;
