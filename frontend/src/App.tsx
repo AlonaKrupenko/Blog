@@ -3,7 +3,7 @@ import styles from "./App.module.scss";
 import Header from "./components/Header/Header";
 import PostsList from "./pages/PostsList/PostsList";
 import Container from "@mui/material/Container";
-import NewPostModal from "./components/NewPostModal/NewPostModal";
+import NewPostModal from "./components/PostModal/PostModal";
 // import { Route, Router, Routes } from "react-router-dom";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 

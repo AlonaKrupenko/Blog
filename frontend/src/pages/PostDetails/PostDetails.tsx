@@ -7,6 +7,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import NewCommentModal from "../../components/NewCommentModal/NewCommentModal";
+import NewPostModal from "../../components/PostModal/PostModal";
 
 const PostPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -17,6 +18,7 @@ const PostPage: React.FC = () => {
   );
 
   const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
+  const [isPostModalOpen, setIsPostModalOpen] = useState(false);
 
   useEffect(() => {
     if (id) dispatch(fetchPostById(id));
@@ -40,12 +42,20 @@ const PostPage: React.FC = () => {
     }
   };
 
+  const handleEdit = () => {
+    if (currentPost) {
+      setIsPostModalOpen(true);
+    }
+  };
+
+  const handleClosePostModal = () => setIsPostModalOpen(false);
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
   return (
     <Container>
-      <Button variant="contained" color="warning">
+      <Button onClick={handleEdit} variant="contained" color="warning">
         Edit Post
       </Button>
       <Button onClick={handleDelete} variant="contained" color="error">
@@ -79,6 +89,20 @@ const PostPage: React.FC = () => {
       ) : (
         <Typography variant="body2">No comments yet.</Typography>
       )}
+
+      <NewPostModal
+        open={isPostModalOpen}
+        onClose={handleClosePostModal}
+        postToEdit={
+          currentPost
+            ? {
+                id: currentPost.id.toString(),
+                title: currentPost.title,
+                content: currentPost.content,
+              }
+            : undefined
+        }
+      />
     </Container>
   );
 };

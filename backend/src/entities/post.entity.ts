@@ -27,7 +27,7 @@ export class Post {
 
   @OneToMany(() => Comment, (comment) => comment.post, {
     eager: true,
-    onDelete: 'CASCADE',
+    cascade: ['remove'],
   })
   comments: Comment[];
 }

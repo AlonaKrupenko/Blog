@@ -1,26 +1,46 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { createPost } from "../../redux/postSlice";
+import { createPost, updatePost } from "../../redux/postSlice";
 import { TextField, Button, Box, Modal, Typography } from "@mui/material";
 import { AppDispatch } from "../../redux/store";
+import { useNavigate } from "react-router-dom";
 
 interface NewPostModalProps {
   open: boolean;
   onClose: () => void;
+  postToEdit?: { id: string; title: string; content: string };
 }
 
-const NewPostModal: React.FC<NewPostModalProps> = ({ open, onClose }) => {
+const NewPostModal: React.FC<NewPostModalProps> = ({
+  open,
+  onClose,
+  postToEdit,
+}) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const dispatch = useDispatch<AppDispatch>();
 
+  useEffect(() => {
+    if (postToEdit) {
+      setTitle(postToEdit.title);
+      setContent(postToEdit.content);
+    }
+  }, [postToEdit]);
+
+  const navigate = useNavigate();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (title && content) {
-      await dispatch(createPost({ title, content }));
+      if (postToEdit) {
+        await dispatch(updatePost({ id: postToEdit.id, title, content }));
+      } else {
+        await dispatch(createPost({ title, content }));
+      }
       setTitle("");
       setContent("");
       onClose();
+      navigate("/");
     }
   };
 
@@ -41,7 +61,7 @@ const NewPostModal: React.FC<NewPostModalProps> = ({ open, onClose }) => {
         }}
       >
         <Typography variant="h6" sx={{ marginBottom: 2 }}>
-          Create a New Post
+          {postToEdit ? "Edit Post" : "Create a New Post"}
         </Typography>
         <Box
           component="form"
@@ -65,7 +85,7 @@ const NewPostModal: React.FC<NewPostModalProps> = ({ open, onClose }) => {
             required
           />
           <Button type="submit" variant="contained" color="primary">
-            Create Post
+            {postToEdit ? "Confirm Update" : "Create Post"}
           </Button>
         </Box>
       </Box>

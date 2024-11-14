@@ -60,6 +60,22 @@ export const addComment = createAsyncThunk(
   }
 );
 
+export const updatePost = createAsyncThunk(
+  "posts/updatePost",
+  async ({
+    id,
+    title,
+    content,
+  }: {
+    id: string;
+    title: string;
+    content: string;
+  }) => {
+    const response = await api.put(`/posts/${id}`, { title, content });
+    return response.data;
+  }
+);
+
 const initialState: PostState = {
   posts: [],
   currentPost: null,
@@ -131,7 +147,7 @@ const postSlice = createSlice({
         state.error = action.error.message || "Failed to delete the post.";
       })
 
-      // Add comment to a post 
+      // Add comment to a post
       .addCase(addComment.fulfilled, (state, action) => {
         const { postId, content, id } = action.payload;
 
